@@ -1,0 +1,18 @@
+{
+  "log_level": "info",
+
+  "read_file_settings" : {
+    "2": {"name":"fio", "header":"Ф.И.О."},
+    "3": {"name":"data_paym", "header":"Дата платежа", "type":"date", "format":"dd.mm.yyyy"},
+    "4": {"name":"account", "header":"Лицевой счет", "type":"int64"},
+    "5": {"name":"address", "header":"Адрес"},
+    "6": {"name":"paym_account", "header":"Сумма платежа", "type":"float64", "format":"#,##0.00"}
+    },
+    
+  "write_file_settings": {
+      "1": {"name":"fio", "header":"Ф.И.О.", "width":40},
+      "2": {"name":"data_paym", "header":"Дата платежа", "type":"date"},
+      "3": {"name":"account", "header":"Лицевой счет", "type":"int64"},
+      "5": {"name":"paym_account", "header":"Сумма платежа", "type":"float64", "format":"#,##0.00"}
+    }
+}

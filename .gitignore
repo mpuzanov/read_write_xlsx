@@ -1,0 +1,23 @@
+/.vscode
+/bin
+/files
+/logs
+
+*.exe
+*.exe~
+*.dll
+*.so
+*.log
+*.env*
+*.out
+*.tmp
+*.zip
+
+*.code-workspace
+go.sum
+
+coverage.html
+
+# запускаемый файл
+read_write_xlsx
+!cmd/read_write_xlsx
