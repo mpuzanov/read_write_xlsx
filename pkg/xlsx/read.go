@@ -52,6 +52,9 @@ func (s *FieldsExcel) ExcelToData(filename string, startData int) ([]map[string]
 		var val interface{}
 		dt := make(map[string]interface{}, len(s.fields))
 		for key, v := range s.fields {
+			if key > len(row) {
+				break
+			}
 			val = row[key-1]
 
 			if v.Type == "date" {
