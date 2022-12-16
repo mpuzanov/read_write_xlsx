@@ -22,10 +22,9 @@ func (app *App) Run(filename string) error {
 
 	app.log.Infof("Обрабатываем файл %v", filename)
 
-	fileExcelRead := xlsx.NewFieldsExcel("", app.cfg.ReadFileSettings, app.log)
+	fileExcelRead := xlsx.NewFieldsExcel(app.cfg.ReadFileSettings.SheetName, app.cfg.ReadFileSettings.Fields, app.log)
 	app.log.Debugf("fileExcelRead: %v", fileExcelRead)
-
-	data, err := fileExcelRead.ExcelToData(filename, 2)
+	data, err := fileExcelRead.ExcelToData(filename, app.cfg.ReadFileSettings.StartRow)
 	if err != nil {
 		return err
 	}

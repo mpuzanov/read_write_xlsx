@@ -58,7 +58,7 @@ type FieldExcel struct {
 // FieldsExcel структура для описания массива колонок excel-файла
 type FieldsExcel struct {
 	sheetName string
-	fields    map[int]FieldExcel // int - используется как номер колонки (при импорте или выводе)
+	fields    map[int]FieldExcel `yaml:"fields"` // int - используется как номер колонки (при импорте или выводе)
 	log       Logger
 }
 

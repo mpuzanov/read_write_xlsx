@@ -18,8 +18,14 @@ func ShowVersion() string {
 
 // Config ...
 type Config struct {
-	LogLevel          string                  `json:"log_level"`
-	ReadFileSettings  map[int]xlsx.FieldExcel `json:"read_file_settings"`
+	LogLevel string `json:"log_level"`
+
+	ReadFileSettings struct {
+		SheetName string                  `json:"sheet_name,omitempty"`
+		StartRow  int                     `json:"start_row,omitempty" env:"START_ROW" env-default:"2"`
+		Fields    map[int]xlsx.FieldExcel `json:"fields"`
+	} `json:"read_file_settings"`
+
 	WriteFileSettings map[int]xlsx.FieldExcel `json:"write_file_settings"`
 }
 

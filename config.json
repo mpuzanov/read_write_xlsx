@@ -1,12 +1,16 @@
 {
-  "log_level": "info",
+  "log_level": "debug",
 
   "read_file_settings" : {
+    "sheet_name": "Платежи",
+    "start_row": 2,
+    "fields": {
     "2": {"name":"fio", "header":"Ф.И.О."},
     "3": {"name":"data_paym", "header":"Дата платежа", "type":"date", "format":"dd.mm.yyyy"},
     "4": {"name":"account", "header":"Лицевой счет", "type":"int64"},
     "5": {"name":"address", "header":"Адрес"},
     "6": {"name":"paym_account", "header":"Сумма платежа", "type":"float64", "format":"#,##0.00"}
+      }
     },
     
   "write_file_settings": {

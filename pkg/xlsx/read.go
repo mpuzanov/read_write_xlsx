@@ -25,7 +25,10 @@ func (s *FieldsExcel) ExcelToData(filename string, startData int) ([]map[string]
 	if s.sheetName == "" {
 		s.sheetName = f.GetSheetName(0) // получаем имя 1 листа
 	}
-	s.log.Debug("Лист: ", s.sheetName)
+	if startData == 0 {
+		startData = 2
+	}
+	s.log.Debugf("Лист: %v, Строка начала данных: %v", s.sheetName, startData)
 
 	i := 0
 	data := make([]map[string]interface{}, 0)
