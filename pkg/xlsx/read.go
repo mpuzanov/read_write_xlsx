@@ -53,7 +53,7 @@ func (s *FieldsExcel) ExcelToData(filename string, startData int) ([]map[string]
 		dt := make(map[string]interface{}, len(s.fields))
 		for key, v := range s.fields {
 			if key > len(row) {
-				break
+				continue
 			}
 			val = row[key-1]
 
