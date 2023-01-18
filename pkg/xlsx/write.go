@@ -210,7 +210,7 @@ func (s *FieldsExcel) DataToExcel(filename string, startRow int, data []map[stri
 	//============================================
 */
 func (s *FieldsExcel) CreatePivotTableFile(filename, sheetNameSvod string,
-	dataRange, PivotTableRange string,
+	DataRange, PivotTableRange string,
 	PivotTableRows []excelize.PivotTableField,
 	PivotTableFilter []excelize.PivotTableField,
 	PivotTableColumns []excelize.PivotTableField,
@@ -228,8 +228,8 @@ func (s *FieldsExcel) CreatePivotTableFile(filename, sheetNameSvod string,
 	}
 	f.NewSheet(sheetNameSvod)
 	if err := f.AddPivotTable(&excelize.PivotTableOption{
-		DataRange:       dataRange,
-		PivotTableRange: fmt.Sprintf("%s!$B$5:$E$20", sheetNameSvod),
+		DataRange:       DataRange,
+		PivotTableRange: PivotTableRange, //fmt.Sprintf("%s!$B$5:$E$20", sheetNameSvod),
 		Rows:            PivotTableRows,
 		Filter:          PivotTableFilter,
 		Columns:         PivotTableColumns,
