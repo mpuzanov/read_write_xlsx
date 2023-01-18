@@ -58,7 +58,7 @@ func (app *App) Run(filename string) error {
 		dataRange,
 		pivotTableRange,
 		[]excelize.PivotTableField{ //PivotTableRows
-			{Data: "Дата платежа", Name: "Дата платежа", Subtotal: "Sum"}, {Data: "Лицевой счет"},
+			{Data: "Дата платежа", Name: "Дата платежа"}, {Data: "Лицевой счет"},
 		},
 		[]excelize.PivotTableField{ //PivotTableFilter
 		},
@@ -66,6 +66,7 @@ func (app *App) Run(filename string) error {
 		},
 		[]excelize.PivotTableField{ //PivotTableData
 			{Data: "Сумма платежа", Name: "Сумма платежа", Subtotal: "Sum"},
+			{Data: "Лицевой счет", Name: "Количество", Subtotal: "Count"},
 		},
 	); err != nil {
 		return err

@@ -32,7 +32,7 @@ func (s *FieldsExcel) DataToExcel(filename string, startRow int, data []map[stri
 		if err != nil {
 			return fmt.Errorf("OpenFile %v", err)
 		}
-		if index := f.GetSheetIndex(s.sheetName); index != -1 {
+		if index, _ := f.GetSheetIndex(s.sheetName); index != -1 {
 			f.DeleteSheet(s.sheetName)
 		}
 		f.NewSheet(s.sheetName)
@@ -155,20 +155,22 @@ func (s *FieldsExcel) DataToExcel(filename string, startRow int, data []map[stri
 	}
 	//============= создаём умную таблицу
 	letterLastColumn, _ := excelize.ColumnNumberToName(maxColumn)
-	letterLastColumn = fmt.Sprintf("%s%d", letterLastColumn, countData+startRow)
+	rangeRef := fmt.Sprintf("%s:%s%d", addrStart, letterLastColumn, countData+startRow)
 	tableName := "table" + strconv.Itoa(randomRange(1, 100))
-	format := fmt.Sprintf(`{
-		"table_name": "%s",
-		"table_style": "TableStyleMedium2",
-		"show_first_column": false,
-		"show_last_column": false,
-		"show_row_stripes": false,
-		"show_column_stripes": false
-	}`, tableName)
-	s.log.Debugf("addrStart=%s, letterLastColumn=%s, table_name=%s", addrStart, letterLastColumn, tableName)
-	if err := streamWriter.AddTable(addrStart, letterLastColumn, format); err != nil {
+	s.log.Debugf("rangeRef=%s, table_name=%s", rangeRef, tableName)
+
+	disable := false
+	if err := streamWriter.AddTable(rangeRef, &excelize.TableOptions{
+		Name:              tableName,
+		StyleName:         "TableStyleMedium2",
+		ShowFirstColumn:   false,
+		ShowLastColumn:    false,
+		ShowRowStripes:    &disable,
+		ShowColumnStripes: false,
+	}); err != nil {
 		return fmt.Errorf("AddTable %v %w", tableName, err)
 	}
+
 	//==========================================
 	f.SetActiveSheet(0)
 
@@ -182,34 +184,7 @@ func (s *FieldsExcel) DataToExcel(filename string, startRow int, data []map[stri
 }
 
 // CreatePivotTableFile ...
-/*
-	//==========================================
-	sheetNameSvod := "Свод"
-	letterLastColumn, _ := excelize.ColumnNumberToName(fileExcel.CountColumn())
-	if err := fileExcel.CreatePivotTableFile(filename, sheetNameSvod,
-		fmt.Sprintf("%s!$A$%d:$%s$%d", sheetName, 1, letterLastColumn, len(dt)),
-		fmt.Sprintf("%s!$B$5:$E$20", sheetNameSvod),
-		[]excelize.PivotTableField{
-			{Data: "Улица"}, {Data: "Номер дома"},
-		},
-		[]excelize.PivotTableField{
-			{Data: "Организация"}, {Data: "Фиас"}, {Data: "Населённый пункт"}, {Data: "Тип объекта"},
-		},
-		[]excelize.PivotTableField{
-			{Data: "Услуга"},
-		},
-		[]excelize.PivotTableField{
-			{Data: "Начислено", Name: "Начислено", Subtotal: "Sum"},
-			{Data: "Начислено ОДН", Name: "Начислено ОДН", Subtotal: "Sum"},
-			{Data: "Перерасчеты", Name: "Перерасчеты", Subtotal: "Sum"},
-			{Data: "Начислено итого", Name: "Начислено итого", Subtotal: "Sum"},
-		},
-	); err != nil {
-		return err
-	}
-	//============================================
-*/
-func (s *FieldsExcel) CreatePivotTableFile(filename, sheetNameSvod string,
+func (s *FieldsExcel) CreatePivotTableFile(filename, sheetNamePivot string,
 	DataRange, PivotTableRange string,
 	PivotTableRows []excelize.PivotTableField,
 	PivotTableFilter []excelize.PivotTableField,
@@ -223,13 +198,13 @@ func (s *FieldsExcel) CreatePivotTableFile(filename, sheetNameSvod string,
 	}
 	defer f.Close()
 
-	if index := f.GetSheetIndex(sheetNameSvod); index != -1 {
-		f.DeleteSheet(sheetNameSvod)
+	if index, _ := f.GetSheetIndex(sheetNamePivot); index != -1 {
+		f.DeleteSheet(sheetNamePivot)
 	}
-	f.NewSheet(sheetNameSvod)
-	if err := f.AddPivotTable(&excelize.PivotTableOption{
+	f.NewSheet(sheetNamePivot)
+	if err := f.AddPivotTable(&excelize.PivotTableOptions{
 		DataRange:       DataRange,
-		PivotTableRange: PivotTableRange, //fmt.Sprintf("%s!$B$5:$E$20", sheetNameSvod),
+		PivotTableRange: PivotTableRange,
 		Rows:            PivotTableRows,
 		Filter:          PivotTableFilter,
 		Columns:         PivotTableColumns,
@@ -240,6 +215,12 @@ func (s *FieldsExcel) CreatePivotTableFile(filename, sheetNameSvod string,
 		ShowRowHeaders:  true,
 		ShowColHeaders:  true,
 		ShowLastColumn:  true,
+
+		UseAutoFormatting: true,
+		PageOverThenDown:  true,
+		//MergeItem:         true,
+		CompactData: false,
+		//ShowError:         true,
 	}); err != nil {
 		return err
 	}
